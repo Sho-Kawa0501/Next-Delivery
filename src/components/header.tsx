@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import MenuSheet from './menu-sheet'
+import PlaceSearchBar from './place-search-bar'
 
 
 const Header = () => {
@@ -12,7 +13,9 @@ const Header = () => {
             <Link href={"/"}>Coffee App</Link>
           </div>
         <div>住所を選択</div>
-        <div className="flex-1 bg-yellow-200">検索バー</div>
+        <div className="flex-1 bg-yellow-200">
+          <PlaceSearchBar />
+        </div>
         <div>カート</div> 
       </div>
     </header>

@@ -9,6 +9,7 @@ import {
   CommandList
 } from "@/components/ui/command"
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useDebouncedCallback } from 'use-debounce';
 import { v4 as uuidv4 } from 'uuid';
 import { RestaurantSuggestion } from "@/types"
@@ -23,6 +24,7 @@ const PlaceSearchBar = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const clickedOnItem = useRef(false)
+  const router = useRouter()
 
   const fetchSuggestions = useDebouncedCallback(async (input) => {
     if(!input.trim()) {
@@ -73,11 +75,30 @@ const PlaceSearchBar = () => {
   }
 
   const handleSelectSuggestion = (suggestion:RestaurantSuggestion) => {
+    if(suggestion.type === "placePrediction") {
+      router.push(
+        `/restaurant/${suggestion.placeId}?sesstionToken=${sessionToken}`
+      )
+      setSessionToken(uuidv4())
+    } else {
+      router.push(
+        // 検索結果ページに遷移
+        `/restaurant/${suggestion.placeId}?restaurant=${suggestion.placeName}`
+      )
+    }
+  }
 
+  const handleKeyDown = (e:React.KeyboardEvent<HTMLDivElement>) => {
+    if(!inputText.trim()) return 
+    if(e.key === "Enter") {
+      router.push(`/search?restaurant=${inputText}`)
+      setOpen(false)
+    }
+    setOpen(false)
   }
 
   return(
-    <Command className=" overflow-visible bg-muted" shouldFilter={false}>
+    <Command onKeyDown={handleKeyDown} className=" overflow-visible bg-muted" shouldFilter={false}>
       <CommandInput
         value={inputText}
         placeholder="Type a command or search..."

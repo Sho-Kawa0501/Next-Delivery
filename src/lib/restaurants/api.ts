@@ -193,6 +193,63 @@ export async function fetchCategoryRestaurants(category: string) {
 
 }
 
+// キーワード検索機能
+export async function fetchRestaurantsByKeyword(query: string) {
+  const url = "https://places.googleapis.com/v1/places:searchText"
+
+  const apiKey = process.env.GOOGLE_API_KEY
+  const header = {
+    "Content-Type": "application/json",
+    "X-Goog-Api-Key": apiKey!,
+    "X-Goog-FieldMask":
+    "places.id,places.displayName,places.primaryType,places.photos",
+  }
+
+  const requestBody = {
+    "textQuery": query,
+    "pageSize": 10,
+    "locationBias": {
+      "circle": {
+        "center": {
+          "latitude": 35.6669248,
+          "longitude": 139.6514163},
+        "radius": 500.0,
+        
+      }
+    },
+    languageCode: "ja",
+    "rankPreference": "DISTANCE"
+  }
+
+  const response = await fetch(url, {
+    method:"POST",
+    body:JSON.stringify(requestBody),
+    headers: header,
+    next: {revalidate: 86400 }, //キャッシュからデータ取得
+  })
+
+  if(!response.ok) {
+    const errorData = await response.json()
+    console.error(errorData)
+    return {error: `TextSearchRequest Error:${response.status}`}
+  }
+
+  const data:GooglePlacesSearchApiResponse = await response.json()
+  // console.log(data)
+  if(!data.places) {
+    return { data:[] }
+  }
+
+  // レスポンスの型を整形するための関数？
+  const textSearchPlaces = data.places
+
+  //整形関数
+  const restaurants = await transformPlaceResults(textSearchPlaces);
+  
+  return {data: restaurants}
+
+}
+
 export async function getPhotoUrl(name:string, maxWidth = 400) {
   "use cache"
   console.log("use cache getphotourl")

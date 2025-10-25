@@ -1,4 +1,4 @@
-import { GooglePlacesSearchApiResponse } from "@/types"
+import { GooglePlacesDetailsApiResponse, GooglePlacesSearchApiResponse, PlaceDetailsAll } from "@/types"
 import { transformPlaceResults } from "./utils"
 import { PlaceSearchResult } from "@/types"
 
@@ -258,3 +258,50 @@ export async function getPhotoUrl(name:string, maxWidth = 400) {
     console.log(url)
     return url;
   }
+
+export const getPlaceDetails = async (
+  placeId: string,
+  fields: string[],
+  sessionToken:string
+) => {
+
+  const fieldsParam = fields.join(",")
+  let url:string
+  if(sessionToken) {
+    url = `https://places.googleapis.com/v1/places/${placeId}?sessionToken=${sessionToken}&languageCode=ja`
+  } else {
+    url = `https://places.googleapis.com/v1/places/${placeId}?languageCode=ja`
+  }
+
+  const apiKey = process.env.GOOGLE_API_KEY
+  const header = {
+    "Content-Type": "application/json",
+    "X-Goog-Api-Key": apiKey!,
+    // "X-Goog-FieldMask":
+    // "places.id,places.displayName,places.primaryType,places.photos",
+    "X-Goog-FieldMask": fieldsParam
+  }
+
+  const response = await fetch(url, {
+    method:"GET",
+    headers: header,
+    next: {revalidate: 86400 }, //キャッシュからデータ取得
+  })
+
+  if(!response.ok) {
+    const errorData = await response.json()
+    console.error(errorData)
+    return {error: `getPlaceDetails Error:${response.status}`}
+  }
+
+  const data: GooglePlacesDetailsApiResponse = await response.json()
+  console.log("pdd", data)
+
+  const results:PlaceDetailsAll = {}
+
+  if(fields.includes("location") && data.location) {
+    results.location = data.location
+  }
+
+  return {data: results}
+}

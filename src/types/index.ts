@@ -27,6 +27,23 @@ export interface GooglePlacesAutocompleteApiResponse {
   suggestions?: PlaceAutocompleteResult[]
 }
 
+export interface GooglePlacesDetailsApiResponse {
+  location?: { latitude?: number; longitude?: number };
+  // displayName?: {
+  //   languageCode?: string;
+  //   text?: string;
+  // };
+  // primaryType?: string;
+  // photos?: PlacePhoto[];
+}
+
+export interface PlaceDetailsAll {
+  location?: { latitude?: number; longitude?: number };
+  // displayName?: string;
+  // primaryType?: string;
+  // photoUrl?: string;
+}
+
 export interface PlaceAutocompleteResult {
   placePrediction?: {
     place?: string
@@ -34,6 +51,9 @@ export interface PlaceAutocompleteResult {
     structuredFormat?: {
       mainText?: {
         text?:string
+      }
+      secondaryText?: {
+        text?: string
       }
     }
   }
@@ -48,5 +68,11 @@ export interface RestaurantSuggestion {
   type: string
   placeId?: string
   placeName: string
+}
+
+export interface AddressSuggestion {
+  placeId: string
+  placeName: string
+  address_text: string
 }
 

@@ -1,27 +1,37 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      movies: {
+      addresses: {
         Row: {
-          // the data expected from .select()
+          address_text: string
+          created_at: string
           id: number
+          latitude: number
+          longitude: number
           name: string
-          data: Json | null
+          user_id: string
         }
         Insert: {
-          // the data to be passed to .insert()
-          id?: never // generated columns must not be supplied
-          name: string // `not null` columns with no default must be supplied
-          data?: Json | null // nullable columns can be omitted
+          address_text: string
+          created_at?: string
+          id?: number
+          latitude: number
+          longitude: number
+          name: string
+          user_id: string
         }
         Update: {
-          // the data to be passed to .update()
-          id?: never
-          name?: string // `not null` columns are optional on .update()
-          data?: Json | null
+          address_text?: string
+          created_at?: string
+          id?: number
+          latitude?: number
+          longitude?: number
+          name?: string
+          user_id?: string
         }
+        Relationships: []
       }
     }
   }

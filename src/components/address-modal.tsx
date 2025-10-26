@@ -21,10 +21,12 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command"
-import { AddressSuggestion } from '@/types'
+import { Address, AddressResponse, AddressSuggestion } from '@/types'
 import { useDebouncedCallback } from 'use-debounce';
 import { AlertCircle, LoaderCircle, MapPin } from 'lucide-react';
-import { selectSuggestionAction } from '@/app/(private)/actions/addressActions';
+import { selectAddressAction, selectSuggestionAction } from '@/app/(private)/actions/addressActions';
+import useSWR from "swr"
+import { cn } from '@/lib/utils';
 
 const AddressModal = () => {
   const [inputText, setInputText] = useState("")
@@ -32,6 +34,7 @@ const AddressModal = () => {
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
 
     const fetchSuggestions = useDebouncedCallback(async (input) => {
       if(!input.trim()) {
@@ -70,19 +73,59 @@ const AddressModal = () => {
         fetchSuggestions(inputText)
     }, [inputText])
 
+    // const fetcher = (url:string) => fetch(url).then(res => res.json())
+    const fetcher = async (url: string) => {
+      const response = await fetch(url)
+      if(!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error)
+      }
+
+      const data = await response.json()
+      return data
+    }
+
+    const { 
+      data,
+      error,
+      isLoading: loading,
+      mutate
+    } = useSWR<AddressResponse>(`/api/address`, fetcher)
+    console.log("swr", data)
+ 
+    if (error) {
+      console.error(error)
+      return <div>{error.message}</div>
+    }
+    if (loading) return <div></div>
+
     const handleSelectSuggestion = async (suggestions: AddressSuggestion) => {
 
       try {
         await selectSuggestionAction(suggestions, sessionToken)
         setSessionToken(uuidv4())
+        setInputText("")
+        mutate()
       } catch(error) {
         alert("予期せぬエラー発生")
       }
     }
 
+    const handleSelectAddress = async (address: Address) => {
+      try{
+        await selectAddressAction(address.id)
+        mutate()
+        setOpen(false)
+      } catch(error) {
+        alert("予期せぬエラーが発生しました")
+      }
+    }
+
   return (
-    <Dialog>
-      <DialogTrigger>住所を選択</DialogTrigger>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
+      <DialogTrigger>
+        {data?.selectedAddress ? data.selectedAddress.name : "住所を選択"}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>住所</DialogTitle>
@@ -132,12 +175,20 @@ const AddressModal = () => {
                 ))}
               </>
             ) : (
-              <>
-              
+              <>              
                 <h3 className="font-black text-lg mb-2">保存済みの住所</h3>
-                <CommandItem className="p-5">Calendar</CommandItem>
-                <CommandItem className="p-5">Search Emoji</CommandItem>
-                <CommandItem className="p-5">Calculator</CommandItem>
+                {data?.addressList.map((address) => (
+                  <CommandItem 
+                    onSelect={() => handleSelectAddress(address)}
+                    key={address.id}
+                    className={cn("p-5", address.id === data?.selectedAddress.id && "bg-muted")}>
+                    <div>
+                      <p className="font-bold">{address.name}</p>
+                      <p>{address.address_text}</p>
+                    </div>
+                  </CommandItem>
+                ))}
+                
               </>
             )}
             

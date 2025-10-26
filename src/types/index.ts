@@ -76,3 +76,15 @@ export interface AddressSuggestion {
   address_text: string
 }
 
+export interface Address {
+  id: number
+  name: string
+  address_text: string
+  latitude: number
+  longitude: number
+}
+
+export interface AddressResponse {
+  addressList: Address[]
+  selectedAddress: Address
+}

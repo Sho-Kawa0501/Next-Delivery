@@ -28,6 +28,7 @@ import { deleteAddressAction, selectAddressAction, selectSuggestionAction } from
 import useSWR from "swr"
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
 
 const AddressModal = () => {
   const [inputText, setInputText] = useState("")
@@ -37,103 +38,111 @@ const AddressModal = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
 
-    const fetchSuggestions = useDebouncedCallback(async (input) => {
-      if(!input.trim()) {
-        setSuggestions([])
-        return
-      }
-      console.log("input",input)
-      try {
-        const response = await fetch(
-          `/api/address/autocomplete?input=${input}&sessionToken=${sessionToken}`)
-        if(!response.ok) {
-          const errorData = await response.json()
-          setErrorMessage(errorData.error)
-          console.error(errorData.error)
-          return
-        }
-        const data:AddressSuggestion[] = await response.json()
-        console.log("suge", data)
-        setSuggestions(data)
-      } catch (error) {
-        setErrorMessage("予期せぬエラーが発生しました。")
-        console.log("error")
-      } finally {
-        setIsLoading(false)
-      }
-    },1000)
-  
-    useEffect(() => {
-        if(!inputText.trim()) {
-          // setOpen(false)
-          setSuggestions([])
-          return
-        }
-        setIsLoading(true)
-        // setOpen(true)
-        fetchSuggestions(inputText)
-    }, [inputText])
+  const router = useRouter()
 
-    // const fetcher = (url:string) => fetch(url).then(res => res.json())
-    const fetcher = async (url: string) => {
-      const response = await fetch(url)
+  const fetchSuggestions = useDebouncedCallback(async (input) => {
+    if(!input.trim()) {
+      setSuggestions([])
+      return
+    }
+    console.log("input",input)
+    try {
+      const response = await fetch(
+        `/api/address/autocomplete?input=${input}&sessionToken=${sessionToken}`)
       if(!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error)
+        setErrorMessage(errorData.error)
+        console.error(errorData.error)
+        return
       }
+      const data:AddressSuggestion[] = await response.json()
+      console.log("suge", data)
+      setSuggestions(data)
+    } catch (error) {
+      setErrorMessage("予期せぬエラーが発生しました。")
+      console.log("error")
+    } finally {
+      setIsLoading(false)
+    }
+  },1000)
 
-      const data = await response.json()
-      return data
+  useEffect(() => {
+    if(!inputText.trim()) {
+      // setOpen(false)
+      setSuggestions([])
+      return
+    }
+    setIsLoading(true)
+    // setOpen(true)
+    fetchSuggestions(inputText)
+  }, [inputText])
+
+  // const fetcher = (url:string) => fetch(url).then(res => res.json())
+  const fetcher = async (url: string) => {
+    const response = await fetch(url)
+    if(!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error)
     }
 
-    const { 
-      data,
-      error,
-      isLoading: loading,
-      mutate
-    } = useSWR<AddressResponse>(`/api/address`, fetcher)
-    console.log("swr", data)
- 
-    if (error) {
-      console.error(error)
-      return <div>{error.message}</div>
+    const data = await response.json()
+    return data
+  }
+
+  const { 
+    data,
+    error,
+    isLoading: loading,
+    mutate
+  } = useSWR<AddressResponse>(`/api/address`, fetcher)
+  console.log("swr", data)
+
+  if (error) {
+    console.error(error)
+    return <div>{error.message}</div>
+  }
+  if (loading) return <div></div>
+
+  const handleSelectSuggestion = async (suggestions: AddressSuggestion) => {
+
+    try {
+      await selectSuggestionAction(suggestions, sessionToken)
+      setSessionToken(uuidv4())
+      setInputText("")
+      mutate()
+      router.refresh()
+    } catch(error) {
+      alert("予期せぬエラー発生")
     }
-    if (loading) return <div></div>
+  }
 
-    const handleSelectSuggestion = async (suggestions: AddressSuggestion) => {
+  const handleSelectAddress = async (address: Address) => {
+    try{
+      await selectAddressAction(address.id)
+      mutate()
+      setOpen(false)
+      router.refresh()
+    } catch(error) {
+      alert("予期せぬエラーが発生しました")
+    }
+  }
 
-      try {
-        await selectSuggestionAction(suggestions, sessionToken)
-        setSessionToken(uuidv4())
-        setInputText("")
-        mutate()
-      } catch(error) {
-        alert("予期せぬエラー発生")
+  const handleDeleteAddress = async (addressId: number) => {
+    console.log()
+    const ok = window.confirm("この住所を削除しますか？")
+    if(!ok) return
+    try{
+      const selectedAddressId = data?.selectedAddress?.id
+      await deleteAddressAction(addressId)
+      mutate()
+      if(selectedAddressId === addressId) {
+        router.refresh()
       }
+      setOpen(false)
+    } catch(error) {
+      alert("delete予期せぬエラーが発生しました")
     }
-
-    const handleSelectAddress = async (address: Address) => {
-      try{
-        await selectAddressAction(address.id)
-        mutate()
-        setOpen(false)
-      } catch(error) {
-        alert("予期せぬエラーが発生しました")
-      }
-    }
-
-    const handleDeleteAddress = async (addressId: number) => {
-      console.log()
-      const ok = window.confirm("この住所を削除しますか？")
-      if(!ok) return
-      try{
-        await deleteAddressAction(addressId)
-        mutate()
-        setOpen(false)
-      } catch(error) {
-        alert("delete予期せぬエラーが発生しました")
-      }
-    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>

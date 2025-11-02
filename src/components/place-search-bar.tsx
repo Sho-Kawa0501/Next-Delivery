@@ -15,7 +15,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { RestaurantSuggestion } from "@/types"
 import { AlertCircle, LoaderCircle, MapPin, Search } from "lucide-react";
 
-const PlaceSearchBar = () => {
+interface PlaceSearchBarProps {
+  lat: number,
+  lng: number
+}
+
+export const PlaceSearchBar = ({lat, lng}: PlaceSearchBarProps) => {
   const [open, setOpen] = useState(false)
   const [inputText, setInputText] = useState("")
   const [sessionToken, setSessionToken] = useState(uuidv4())
@@ -77,7 +82,7 @@ const PlaceSearchBar = () => {
   const handleSelectSuggestion = (suggestion:RestaurantSuggestion) => {
     if(suggestion.type === "placePrediction") {
       router.push(
-        `/restaurant/${suggestion.placeId}?sesstionToken=${sessionToken}`
+        `/restaurant/${suggestion.placeId}?sesstionToken=${sessionToken}&lat=${lat}&lng=${lng}`
       )
       setSessionToken(uuidv4())
     } else {

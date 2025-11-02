@@ -3,19 +3,22 @@ import Image from "next/image";
 import { Section } from "@/components/section";
 import CarouselContainer from "@/components/carousel-container";
 import RestrantCard from "@/components/restrant-card";
-import { fetchRestaurants, fetchRamenRestaurants } from "@/lib/restaurants/api";
+import { fetchRestaurants, fetchRamenRestaurants, fetchLocation } from "@/lib/restaurants/api";
 import { Restaurant } from "@/types";
 import RestaurantList from "@/components/restaurant-list";
 import Categories from "@/components/categories";
 
 export default async function Home() {
+  const { lat, lng } = await fetchLocation()
+  console.log("lat", lat)
+  console.log("lng", lng)
   const buttonText = "test"
   const onClickButton = () => {
     console.log("test1")
   }
 
-  const {data:nearybyRestaurants, error: nearybyRestaurantsError } = await fetchRestaurants()
-  const {data:nearybyRamenRestaurants, error:nearybyRamenRestaurantsError } = await fetchRamenRestaurants()
+  const {data:nearybyRestaurants, error: nearybyRestaurantsError } = await fetchRestaurants(lat, lng)
+  const {data:nearybyRamenRestaurants, error:nearybyRamenRestaurantsError } = await fetchRamenRestaurants(lat, lng)
   return (
     <>
       <Categories />

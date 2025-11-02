@@ -1,9 +1,11 @@
 import { GooglePlacesDetailsApiResponse, GooglePlacesSearchApiResponse, PlaceDetailsAll } from "@/types"
 import { transformPlaceResults } from "./utils"
 import { PlaceSearchResult } from "@/types"
+import { createClient } from "@/utils/supabase/server"
+import { redirect } from "next/navigation"
 
 // 近くのレストラン取得
-export async function fetchRestaurants() {
+export async function fetchRestaurants(lat: number, lng: number) {
   const url = "https://places.googleapis.com/v1/places:searchNearby"
 
   const apiKey = process.env.GOOGLE_API_KEY
@@ -38,8 +40,8 @@ export async function fetchRestaurants() {
     "locationRestriction": {
       "circle": {
         "center": {
-          "latitude": 35.6669248,
-          "longitude": 139.6514163},
+          "latitude": lat,
+          "longitude": lng},
         "radius": 500.0,
         
       }
@@ -81,7 +83,7 @@ export async function fetchRestaurants() {
 }
 
 // 近くのラーメン店取得
-export async function fetchRamenRestaurants() {
+export async function fetchRamenRestaurants(lat: number, lng: number) {
   const url = "https://places.googleapis.com/v1/places:searchNearby"
 
   const apiKey = process.env.GOOGLE_API_KEY
@@ -98,8 +100,8 @@ export async function fetchRamenRestaurants() {
     "locationRestriction": {
       "circle": {
         "center": {
-          "latitude": 35.6669248,
-          "longitude": 139.6514163},
+          "latitude": lat,
+          "longitude": lng},
         "radius": 500.0,
         
       }
@@ -137,7 +139,7 @@ export async function fetchRamenRestaurants() {
 }
 
 // カテゴリー検索機能
-export async function fetchCategoryRestaurants(category: string) {
+export async function fetchCategoryRestaurants(category: string, lat: number, lng: number) {
   const url = "https://places.googleapis.com/v1/places:searchNearby"
 
   const apiKey = process.env.GOOGLE_API_KEY
@@ -154,8 +156,8 @@ export async function fetchCategoryRestaurants(category: string) {
     "locationRestriction": {
       "circle": {
         "center": {
-          "latitude": 35.6669248,
-          "longitude": 139.6514163},
+          "latitude": lat,
+          "longitude": lng},
         "radius": 500.0,
         
       }
@@ -194,7 +196,7 @@ export async function fetchCategoryRestaurants(category: string) {
 }
 
 // キーワード検索機能
-export async function fetchRestaurantsByKeyword(query: string) {
+export async function fetchRestaurantsByKeyword(query: string, lat: number, lng: number) {
   const url = "https://places.googleapis.com/v1/places:searchText"
 
   const apiKey = process.env.GOOGLE_API_KEY
@@ -211,8 +213,8 @@ export async function fetchRestaurantsByKeyword(query: string) {
     "locationBias": {
       "circle": {
         "center": {
-          "latitude": 35.6669248,
-          "longitude": 139.6514163},
+          "latitude": lat,
+          "longitude": lng},
         "radius": 500.0,
         
       }
@@ -252,10 +254,8 @@ export async function fetchRestaurantsByKeyword(query: string) {
 
 export async function getPhotoUrl(name:string, maxWidth = 400) {
   "use cache"
-  console.log("use cache getphotourl")
     const apiKey = process.env.GOOGLE_API_KEY
     const url = `https://places.googleapis.com/v1/${name}/media?key=${apiKey}&maxWidthPx=${maxWidth}`
-    console.log(url)
     return url;
   }
 
@@ -303,5 +303,56 @@ export const getPlaceDetails = async (
     results.location = data.location
   }
 
+  if(fields.includes("displayName") && data.displayName?.text) {
+    results.displayName = data.displayName?.text
+  }
+
+  if(fields.includes("primaryType") && data.primaryType) {
+    results.primaryType = data.primaryType
+  }
+
+  if(fields.includes("photos")) {
+    results.photoUrl = data.photos?.[0]?.name
+      ? await getPhotoUrl(data.photos[0].name, 1200)
+      : "/no_image.png"
+  }
   return {data: results}
 }
+
+export async function fetchLocation() {
+  const DEFAULT_LOCATION = { lat: 35.6580382, lng: 139.6990609 };
+
+  const supabase = await createClient()
+  const {
+    data: {user},
+    error: userError,
+  } = await supabase.auth.getUser()
+
+  if(userError || !user) {
+    redirect("/login")
+  }
+
+  const { data: selectedAddress, error: selectedAddressError } = await supabase
+    .from('profiles')
+    .select(
+      `
+      addresses (
+    latitude,longitude
+  )
+    `
+  )
+    .eq("id", user.id).single()
+
+    if(selectedAddressError) {
+      console.error("緯度と経度の取得に失敗しました。", selectedAddressError)
+      throw new Error("緯度と経度の取得に失敗しました。")
+    }
+
+    const lat = selectedAddress.addresses?.latitude ?? DEFAULT_LOCATION.lat;
+    const lng = selectedAddress.addresses?.longitude ?? DEFAULT_LOCATION.lng;
+
+    return {lat, lng}
+}
+
+
+          

@@ -29,19 +29,19 @@ export interface GooglePlacesAutocompleteApiResponse {
 
 export interface GooglePlacesDetailsApiResponse {
   location?: { latitude?: number; longitude?: number };
-  // displayName?: {
-  //   languageCode?: string;
-  //   text?: string;
-  // };
-  // primaryType?: string;
-  // photos?: PlacePhoto[];
+  displayName?: {
+    languageCode?: string;
+    text?: string;
+  };
+  primaryType?: string;
+  photos?: PlacePhoto[];
 }
 
 export interface PlaceDetailsAll {
   location?: { latitude?: number; longitude?: number };
-  // displayName?: string;
-  // primaryType?: string;
-  // photoUrl?: string;
+  displayName?: string;
+  primaryType?: string;
+  photoUrl?: string;
 }
 
 export interface PlaceAutocompleteResult {
@@ -87,4 +87,17 @@ export interface Address {
 export interface AddressResponse {
   addressList: Address[]
   selectedAddress: Address
+}
+
+export interface CategoryMenu {
+  categoryName: string;
+  id: string;
+  items: Menu[];
+}
+
+export interface Menu {
+  id: number;
+  name: string;
+  photoUrl: string;
+  price: number;
 }

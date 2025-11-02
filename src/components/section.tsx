@@ -19,7 +19,10 @@ export const Section = ({children, title, expandedContent}: SectionProps) => {
     <section>
       <div className="flex items-center justify-between py-03">
         <h2 className="text-2xl font-bold">{title}</h2>
-        <Button onClick={handleChange}>{isExpanded ? "表示を戻す": "全て表示"}</Button>
+        {expandedContent && (
+          <Button onClick={handleChange}>{isExpanded ? "表示を戻す": "全て表示"}</Button>
+        )}
+        
       </div>
       {isExpanded ? expandedContent : children}
     </section>

@@ -6,13 +6,15 @@ import { getPlaceDetails } from '@/lib/restaurants/api';
 import { notFound } from 'next/navigation';
 import { fetchCategoryMenus } from '@/lib/menus/api';
 import MenuContent from '@/components/menu-content';
+import MenuSeachBar from '@/components/menu-search-bar';
 
 const RestaurantPage = async ({params, searchParams}: {
   params: Promise<{ restaurantId: string}>
-  searchParams: Promise<{sessionToken: string}>
+  searchParams: Promise<{sessionToken: string, searchMenu: string} >
 }) => {
   const { restaurantId } = await params
-  const { sessionToken } = await searchParams
+  const { sessionToken, searchMenu } = await searchParams
+  console.log("searchMenu", searchMenu)
   console.log("restaurantId", restaurantId)
   console.log("sessionToken", sessionToken)
   const {data: restaurant, error} = await getPlaceDetails(
@@ -23,7 +25,7 @@ const RestaurantPage = async ({params, searchParams}: {
 
   const primaryType = restaurant?.primaryType
   const {data:categoryMenus, error:menusError} = primaryType 
-    ? await fetchCategoryMenus(primaryType) 
+    ? await fetchCategoryMenus(primaryType, searchMenu) 
     : {data: []}
 
   console.log("categorys compo", categoryMenus)
@@ -57,7 +59,9 @@ const RestaurantPage = async ({params, searchParams}: {
           </div>
 
           <div className="flex-1">
-            <div className="ml-auto w-80 bg-yellow-300">検索バー</div>
+            <div className="ml-auto w-80">
+              <MenuSeachBar />
+            </div>
           </div>
         </div>
       </div>

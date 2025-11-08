@@ -36,7 +36,6 @@ export const PlaceSearchBar = ({lat, lng}: PlaceSearchBarProps) => {
       setSuggestions([])
       return
     }
-    console.log("input",input)
     try {
       const response = await fetch(
         `/api/restaurant/autocomplete?input=${input}&sessionToken=${sessionToken}`)
@@ -47,11 +46,10 @@ export const PlaceSearchBar = ({lat, lng}: PlaceSearchBarProps) => {
         return
       }
       const data:RestaurantSuggestion[] = await response.json()
-      console.log("suge", data)
+      console.log("fetchSuggestions",data)
       setSuggestions(data)
     } catch (error) {
       setErrorMessage("予期せぬエラーが発生しました。")
-      console.log("error")
     } finally {
       setIsLoading(false)
     }
@@ -79,15 +77,17 @@ export const PlaceSearchBar = ({lat, lng}: PlaceSearchBarProps) => {
     setOpen(true)
   }
 
+  // 検索バーにテキストを入力した際、押下した箇所によって処理条件を分岐。
   const handleSelectSuggestion = (suggestion:RestaurantSuggestion) => {
     if(suggestion.type === "placePrediction") {
+      // レストラン個別ページに遷移
       router.push(
         `/restaurant/${suggestion.placeId}?sesstionToken=${sessionToken}&lat=${lat}&lng=${lng}`
       )
       setSessionToken(uuidv4())
     } else {
       router.push(
-        // 検索結果ページに遷移
+        // 検索結果となるページに遷移
         `/restaurant/${suggestion.placeId}?restaurant=${suggestion.placeName}`
       )
     }
@@ -140,7 +140,6 @@ export const PlaceSearchBar = ({lat, lng}: PlaceSearchBarProps) => {
                 <p>{suggestion.placeName}</p>
               </CommandItem>
             ))}
-            
           </CommandList>
         </div>
       )}

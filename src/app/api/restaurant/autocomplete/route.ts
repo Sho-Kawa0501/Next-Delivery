@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from "next/server"
 import { GooglePlacesAutocompleteApiResponse, RestaurantSuggestion } from "@/types"
 
+// 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const input = searchParams.get("input")
@@ -21,7 +22,6 @@ export async function GET(request: NextRequest) {
     const header = {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": apiKey!,
-    
     }
 
     const requestBody = {
@@ -35,7 +35,6 @@ export async function GET(request: NextRequest) {
             "latitude": lat,
             "longitude": lng},
           "radius": 500.0,
-          
         }
       },
       languageCode: "ja",
@@ -64,6 +63,7 @@ export async function GET(request: NextRequest) {
   const suggestions = data.suggestions ?? []
 
   const results = suggestions.map((suggestion) => {
+    // 店舗情報取得
     if(suggestion.placePrediction && suggestion.placePrediction.placeId && 
       suggestion.placePrediction.structuredFormat?.mainText?.text) {
       return {
@@ -71,6 +71,7 @@ export async function GET(request: NextRequest) {
         placeId: suggestion.placePrediction.placeId,
         placeName: suggestion.placePrediction.structuredFormat?.mainText?.text
       } 
+    // 地域情報？
     } else if(suggestion.queryPrediction && suggestion.queryPrediction.text?.text) {
       return {
         type: "queryPrediction",

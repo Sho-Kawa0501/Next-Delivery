@@ -46,7 +46,7 @@ export interface PlaceDetailsAll {
 }
 
 export interface PlaceAutocompleteResult {
-  placePrediction?: {
+  placePrediction?: { // 単一の場所予測に関する詳細情報
     place?: string
     placeId?: string
     structuredFormat?: {
@@ -58,7 +58,7 @@ export interface PlaceAutocompleteResult {
       }
     }
   }
-  queryPrediction?: {
+  queryPrediction?: { //単一のクエリ予測に関する詳細情報
     text?: {
       text?: string
     }

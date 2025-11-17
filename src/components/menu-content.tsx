@@ -17,14 +17,19 @@ interface MenuContentProps {
   categoryMenus: CategoryMenu[]
   restaurantId: string
 }
+
 const MenuContent = ({categoryMenus, restaurantId}: MenuContentProps) => {
-  const {isOpen, setIsOpen, openModal, closeModal, selectedItem} = useModal()
-  const { targetCart, mutateCart } = useCart(restaurantId, false)
+  // メニューモーダル開閉状態管理
+  const { isOpen, setIsOpen, openModal, closeModal, selectedItem } = useModal()
+  // カートモーダル開閉状態管理
   const { openCart } = useCartVisibility()
-  const [activeCategoryId, setActiveCategoryId] = useState(categoryMenus[0].id)
+  // 選択中レストランのカート情報取得
+  const { targetCart, mutateCart } = useCart(restaurantId, false)
+  // メニューカテゴリー
+  const [ activeCategoryId, setActiveCategoryId ] = useState(categoryMenus[0].id)
+  // カテゴリー名押下時
   const handleSelectCategory = (categoryId: string) => {
     const element = document.getElementById(`${categoryId}-menu`)
-
     if(element) {
       element.scrollIntoView({ behavior: "smooth"})
     }
@@ -53,28 +58,27 @@ const MenuContent = ({categoryMenus, restaurantId}: MenuContentProps) => {
               {category.id === "featured" ? (
                 <CarouselContainer slideToShow={4}>
                   {category.items.map((menu) => (
-                    <MenuCard menu={menu} onClick={openModal} />
+                    <MenuCard 
+                      menu={menu}
+                      onClick={openModal} />
                   ))}
-
                 </CarouselContainer>
               ) : (
                 <div className="grid grid-cols-2 gap-4">
                   {category.items.map((menu) => (
-                    <FlatMenuCard key={menu.id} menu={menu} onClick={openModal}/>
-                  )
-                    
-                )}
+                    <FlatMenuCard 
+                      key={menu.id}
+                      menu={menu}
+                      onClick={openModal} />
+                  ))}
                 </div>
-                
               )}
             </Section>
           </InView>
         ))}
-        MenuContent
       </div>
-
-      <MenuModal 
-        isOpen={isOpen} 
+      <MenuModal
+        isOpen={isOpen}
         closeModal={closeModal}
         selectedItem={selectedItem}
         restaurantId={restaurantId}
@@ -82,7 +86,6 @@ const MenuContent = ({categoryMenus, restaurantId}: MenuContentProps) => {
         targetCart={targetCart}
         mutateCart={mutateCart}
         />
-      
     </div>
   )
 }

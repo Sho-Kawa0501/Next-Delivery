@@ -8,7 +8,7 @@ type addToCartActionResponse =
   {type: "new", cart: Cart} 
   | {type: "update", id: number}
 
-
+// カート、カートアイテムの作成 or 更新
 export async function addToCartAction(
   selectedItem: Menu,
   quantity: number,
@@ -26,7 +26,7 @@ export async function addToCartAction(
 
   const bucket = supabase.storage.from("menus")
 
-  // カート情報取得
+  // ログインユーザーの対象の既存レストランカート情報取得
   const {data: existingCart, error: existingCartError} = await supabase
     .from("carts")
     .select("id")
@@ -35,11 +35,11 @@ export async function addToCartAction(
     .overrideTypes<{id: number}, {merge: false}>()
 
   if (existingCartError) {
-    console.error("カートの取得に失敗しました。", existingCartError);
-    throw new Error("カートの取得に失敗しました。");
+    console.error("カートの取得に失敗しました。", existingCartError)
+    throw new Error("カートの取得に失敗しました。")
   }
 
-  // 既存のカートが存在しない場合、カートを新規作成＆アイテム追加
+  // 既存のカートが存在しない場合、カートを新規作成＆カートアイテム追加
   if(!existingCart) {
     const {data: newCart, error: newCartError} = await supabase
       .from("carts")
@@ -58,7 +58,7 @@ export async function addToCartAction(
 
     const newCartId = newCart.id
 
-    // カートの中にアイテムを追加
+    // カートにアイテムを追加
     const {error: insertError} = await supabase
       .from("cart_items")
       .insert({
@@ -72,6 +72,7 @@ export async function addToCartAction(
       throw new Error("カートアイテムの追加に失敗しました。");
     }
 
+    // 新規作成したカート情報取得
     const { data: insertedCart, error: insertedCartError } = await supabase
       .from('carts')
       .select(`
@@ -87,13 +88,13 @@ export async function addToCartAction(
             image_path
           )
         )
-    `)
-    // 新規作成されたカートのidを使用
-    .match({
-      user_id: user.id,
-      id: newCartId
-    })
-    .single()
+      `)
+      // 新規作成されたカートのidを使用
+      .match({
+        user_id: user.id,
+        id: newCartId
+      })
+      .single()
 
     if (insertedCartError) {
       console.error("カートデータの取得に失敗しました。", insertedCartError)
@@ -109,24 +110,24 @@ export async function addToCartAction(
       console.error(`レストランデータの取得に失敗しました。${error}`);
     }
 
-    const updatedCart: Cart = {
-        ...insertedCart,
-        cart_items: insertedCart.cart_items.map((item) => {
-          const { image_path, ...restMenus } = item.menus
-          const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
-          return {
-            ...item,
-            menus: {
-              ...restMenus,
-              photoUrl: publicUrl,
-            },
-          }
-        }),
-        restaurantName: restaurantData?.displayName,
-        photoUrl: restaurantData?.photoUrl!
-      }
-
-    return { type: "new", cart: updatedCart}
+    // 新規追加したカートをリターン
+    const addCart: Cart = {
+      ...insertedCart,
+      cart_items: insertedCart.cart_items.map((item) => {
+        const { image_path, ...restMenus } = item.menus
+        const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
+        return {
+          ...item,
+          menus: {
+            ...restMenus,
+            photoUrl: publicUrl,
+          },
+        }
+      }),
+      restaurantName: restaurantData?.displayName,
+      photoUrl: restaurantData?.photoUrl!
+    }
+    return { type: "new", cart: addCart}
   }
 
   //既存のカートが存在する場合、アイテムを追加 or 数量のみ更新
@@ -142,10 +143,6 @@ export async function addToCartAction(
   .single()
 
   if(upsertError) {
-    console.log("upsertError")
-    console.log("quantity", quantity)
-    console.log("existingCart.id", existingCart.id)
-    console.log("selectedItem.id", selectedItem.id)
     console.error("カートアイテム追加・更新に失敗しました。", upsertError);
     throw new Error("カートアイテム追加・更新に失敗しました。");
   }
@@ -153,7 +150,7 @@ export async function addToCartAction(
   return {type: "update", id: data.id }
 }
 
-//
+// カート内アイテムの更新、カート削除
 export async function updateCartItemAction(
   quantity: number,
   cartItemId: number,
@@ -180,7 +177,7 @@ export async function updateCartItemAction(
       throw new Error("カートの削除に失敗しました。");
     }
 
-    //カート自体を削除
+    // 最後の1つのアイテムの場合、カート自体を削除
     if(count === 1) {
       const { error: deleteCartError } = await supabase
         .from("carts")
@@ -204,7 +201,7 @@ export async function updateCartItemAction(
     }
     return
   }
-  // 数量更新
+  // quantityが0以外の場合、 数量更新
   const { error: updateError } = await supabase
     .from("cart_items")
     .update({

@@ -6,17 +6,18 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try{
     const supabase = await createClient()
+    // ユーザー情報取得、存在確認
     const {
       data: {user},
       error: userError
     } = await supabase.auth.getUser()
-
     if(userError || !user) {
       return NextResponse.json({ error: "ユーザーが認証されていません"},{status: 401})
     }
+    // メニューファイルアクセス用
     const bucket = supabase.storage.from("menus")
 
-
+    // ログインユーザーのカート情報取得
     const { data: carts, error: cartsError } = await supabase
       .from('carts')
       .select(`
@@ -43,6 +44,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // 対象のレストランの名称、画像を取得
     const promises = carts.map(async (cart):Promise<Cart> => {
       const {data: restaurantData, error} = await getPlaceDetails(
         cart.restaurant_id,
@@ -54,12 +56,16 @@ export async function GET(request: NextRequest) {
         console.error(`レストランデータの取得に失敗しました。${error}`);
       }
       
+      // Cart型のオブジェクトをリターン
       return {
         ...cart,
         cart_items: cart.cart_items.map((item) => {
+          // 画像取得用としてimage_pathを抽出
           const { image_path, ...restMenus } = item.menus
+          // メニュー画像パス取得
           const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
           return {
+            // CartItem型オブジェクトをリターン
             ...item,
             menus: {
               ...restMenus,

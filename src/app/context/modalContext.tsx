@@ -40,6 +40,5 @@ export const useModal = () => {
    if(!context) {
     throw new Error("useModalはModalProvider内で使用する必要があります。")
    }
-
    return context
 }

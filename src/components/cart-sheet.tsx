@@ -33,9 +33,12 @@ interface CartSheetProps {
 }
 const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSheetProps) => {
   if(!cart) return
+
+  // カートアイテムの数量変更時
   const handleUpdateCartItem = async (value: string, cartItemId: number) => {
     const quantity = Number(value)
     try {
+      // カート内アイテムの更新、カート削除
       await updateCartItemAction(quantity, cartItemId, cart.id)
       const copyCart = {...cart}
       if(quantity === 0) {
@@ -124,7 +127,7 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>ゴミ箱を空にする</p>
+                    <p>カートを空にする</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

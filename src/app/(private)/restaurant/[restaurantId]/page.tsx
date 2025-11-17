@@ -48,12 +48,10 @@ const RestaurantPage = async ({params, searchParams}: {
             <Heart color="gray" strokeWidth={3} size={15} />
           </Button>
         </div>
-
         <div className="mt-4 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">{restaurant.displayName}</h1>
           </div>
-
           <div className="flex-1">
             <div className="ml-auto w-80">
               <MenuSeachBar />

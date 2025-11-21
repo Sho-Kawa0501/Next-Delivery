@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Cart } from "@/types";
-import { calculateSubtotal, calculateTotalQuantity } from "@/lib/cart/utils";
+import { calculateSubtotal, calculateTotalQuantity, sumItems } from "@/lib/cart/utils";
 
 interface CartDropDownProps {
   carts: Cart[]
@@ -52,7 +52,7 @@ const CartDropDown = ({carts, setSelectedCart, openCart}: CartDropDownProps) => 
               </div>
             </div>
             <div className="flex items-center justify-center size-7 font-medium rounded-full bg-primary text-popover text-xs">
-              {calculateTotalQuantity(cart.cart_items)}
+              {sumItems(cart.cart_items)}
             </div>
           </DropdownMenuItem>
         ))}

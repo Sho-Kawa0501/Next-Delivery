@@ -80,7 +80,7 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
           ),
         false
       )
-    } catch {
+    } catch(error) {
       console.error(error)
       alert("エラーが発生しました")
     }
@@ -174,7 +174,6 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
                 </li>
               ))}
             </ul>
-
             <div className="flex justify-between items-center font-bold text-lg">
               <div>小計</div>
               <div>{calculateSubtotal(cart.cart_items).toLocaleString()}</div>

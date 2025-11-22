@@ -37,7 +37,6 @@ const {avatar_url, full_name} = user.user_metadata
           <SheetTitle>メニュー情報</SheetTitle>
           <SheetDescription>ユーザー情報とメニュー情報を表示</SheetDescription>
         </SheetHeader>
-
         {/* ユーザー情報エリア */}
         <div className="flex items-center gap-5">
           <Avatar>
@@ -57,7 +56,7 @@ const {avatar_url, full_name} = user.user_metadata
         {/* メニューエリア */}
         <ul className="space-y-4">
           <li>
-            <Link href={"orders"} className="flex items-center gap-4">
+            <Link href={"/orders"} className="flex items-center gap-4">
               <Bookmark fill="bg-primary" />
               <span className="font-bold">ご注文内容</span>
             </Link>

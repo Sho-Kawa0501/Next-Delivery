@@ -26,7 +26,6 @@ const CartDropDown = ({carts, setSelectedCart, openCart}: CartDropDownProps) => 
           {carts.length}
         </span>
       </DropdownMenuTrigger>
-
       <DropdownMenuContent className="w-[420px]">
         {carts.map((cart) => (
           <DropdownMenuItem 
@@ -56,7 +55,6 @@ const CartDropDown = ({carts, setSelectedCart, openCart}: CartDropDownProps) => 
             </div>
           </DropdownMenuItem>
         ))}
-        
         <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>

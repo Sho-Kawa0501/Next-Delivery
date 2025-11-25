@@ -59,6 +59,7 @@ const MenuContent = ({categoryMenus, restaurantId}: MenuContentProps) => {
                 <CarouselContainer slideToShow={4}>
                   {category.items.map((menu) => (
                     <MenuCard 
+                    key={menu.id}
                       menu={menu}
                       onClick={openModal} />
                   ))}

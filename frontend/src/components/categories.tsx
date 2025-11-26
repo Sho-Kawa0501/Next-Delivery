@@ -74,6 +74,7 @@ const Categories = () => {
       imageUrl: cdnImagePath(encodeURI(`/images/categories/インド料理.png`)),
     },
   ]
+  console.log(JSON.stringify(categories))
   // 現在のURLからクエリ文字列を読み取るクライアントコンポーネントフック 
   const searchParams = useSearchParams()
   // ページ遷移に使用。urlを書き換えて遷移
@@ -104,7 +105,6 @@ const Categories = () => {
           />
       ))}
     </CarouselContainer>
-    
   )
 }
 

@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'snrpafpgtezlaazzutjh.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'd1fkw2reggzrw7.cloudfront.net',
+      },
     ],
   },
   

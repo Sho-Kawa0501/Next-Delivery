@@ -17,61 +17,61 @@ const Categories = () => {
     {
       categoryName: "ファーストフード",
       type: "fast_food_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/ファーストフード.png`)),
+      imageUrl: cdnImagePath(`/images/categories/ファーストフード.png`),
     },
     {
       categoryName: "日本料理",
       type: "japanese_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/日本料理.png`)),
+      imageUrl: cdnImagePath(`/images/categories/日本料理.png`),
     },
     {
       categoryName: "ラーメン",
       type: "ramen_restaurant",
 
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/ラーメン.png`)),
+      imageUrl: cdnImagePath(`/images/categories/ラーメン.png`),
     },
     {
       categoryName: "寿司",
       type: "sushi_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/寿司.png`)),
+      imageUrl: cdnImagePath(`/images/categories/寿司.png`),
     },
     {
       categoryName: "中華料理",
       type: "chinese_restaurant",
 
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/中華料理.png`)),
+      imageUrl: cdnImagePath(`/images/categories/中華料理.png`),
     },
     {
       categoryName: "コーヒ-",
       type: "cafe",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/コーヒー.png`)),
+      imageUrl: cdnImagePath(`/images/categories/コーヒー.png`),
     },
     {
       categoryName: "イタリアン",
       type: "italian_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/イタリアン.png`)),
+      imageUrl: cdnImagePath(`/images/categories/イタリアン.png`),
     },
     {
       categoryName: "フランス料理",
       type: "french_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/フランス料理.png`)),
+      imageUrl: cdnImagePath(`/images/categories/フランス料理.png`),
     },
 
     {
       categoryName: "ピザ",
       type: "pizza_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/ピザ.png`)),
+      imageUrl: cdnImagePath(`/images/categories/ピザ.png`),
     },
 
     {
       categoryName: "韓国料理",
       type: "korean_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/韓国料理.png`)),
+      imageUrl: cdnImagePath(`/images/categories/韓国料理.png`),
     },
     {
       categoryName: "インド料理",
       type: "indian_restaurant",
-      imageUrl: cdnImagePath(encodeURI(`/images/categories/インド料理.png`)),
+      imageUrl: cdnImagePath(`/images/categories/インド料理.png`),
     },
   ]
   console.log(JSON.stringify(categories))

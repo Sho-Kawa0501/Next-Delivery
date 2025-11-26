@@ -5,7 +5,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 export default function DeliveryAnimation() {
   return (
     <DotLottieReact
-      src={cdnImagePath(encodeURI(`/images/Food-prep.lottie`))}
+      src={cdnImagePath(`/images/Food-prep.lottie`)}
       loop
       autoplay
     />

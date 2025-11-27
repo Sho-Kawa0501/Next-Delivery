@@ -33,7 +33,6 @@ export async function GET(request: NextRequest) {
             "latitude": 35.6669248,
             "longitude": 139.6514163},
           "radius": 500.0,
-          
         }
       },
       languageCode: "ja",

@@ -4,7 +4,7 @@ import { Menu } from "@/types";
 
 interface FlatMenuCardProps {
   menu: Menu;
-  onClick?: (menu: Menu) => void;
+  onClick?: (menu: Menu) => void
 }
 
 export default function FlatMenuCard({menu, onClick}:FlatMenuCardProps) {
@@ -26,5 +26,5 @@ export default function FlatMenuCard({menu, onClick}:FlatMenuCardProps) {
         </div>
       </div>
     </Card>
-  );
+  )
 }

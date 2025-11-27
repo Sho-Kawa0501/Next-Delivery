@@ -3,6 +3,7 @@ import { transformPlaceResults } from "./utils"
 import { PlaceSearchResult } from "@/types"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
+import { cdnImagePath } from "../utils"
 
 // 近くのレストラン取得
 export async function fetchRestaurants(lat: number, lng: number) {
@@ -309,8 +310,8 @@ export const getPlaceDetails = async (
   if(fields.includes("photos")) {
     // results.photoUrl = data.photos?.[0]?.name
     //   ? await getPhotoUrl(data.photos[0].name, 1200)
-    //   : "/no_image.png"
-    results.photoUrl = "/no_image.png"
+    //   : cdnImagePath("/no_image.png")
+    results.photoUrl = cdnImagePath("/no_image.png")
   }
   return {data: results}
 }

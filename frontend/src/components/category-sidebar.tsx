@@ -15,9 +15,8 @@ const CategorySidebar = ({
   activeCategoryId
 }: CategorySidebarProps) => {
   
-
   return (
-    <aside className="w-1/4 sticky top-16 h-[calc(100vh-64px)]">CategorySidebar
+    <aside className="w-1/4 sticky top-16 h-[calc(100vh-64px)]">
       <p className="p-3 font-bold">メニュー Menu</p>
       <nav>
         <ul>

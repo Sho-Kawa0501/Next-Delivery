@@ -72,7 +72,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath("/login", "layout");
-  redirect("/auth/login?registered=1");
+  redirect("/");
 }
 
 export async function logout() { 

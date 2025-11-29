@@ -9,7 +9,6 @@ interface AuthFormProps {
   mode: "login" | "signup";
   action: (formData: FormData) => void;
   error?: string;
-  registered?: boolean;
 }
 
 export function AuthForm({
@@ -17,17 +16,10 @@ export function AuthForm({
   mode,
   action,
   error,
-  registered,
 }: AuthFormProps) {
   return (
     <div className="w-full max-w-lg mx-auto p-6 space-y-6">
       <h1 className="text-2xl text-center font-semibold">{title}</h1>
-
-      {registered && (
-        <div className="text-sm text-green-700 bg-green-50 border border-green-100 p-3 rounded">
-          アカウントを作成しました。ログインしてください。
-        </div>
-      )}
 
       {error && (
         <div className="text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded">

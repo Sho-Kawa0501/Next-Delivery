@@ -8,7 +8,6 @@ interface LoginPageProps {
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const sp = (await searchParams) ?? {};
   const error = typeof sp.error === "string" ? sp.error : undefined;
-  const registered = sp.registered === "1";
 
   return (
     <AuthForm
@@ -16,7 +15,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       mode="login"
       action={login}
       error={error}
-      registered={registered}
     />
   );
 }

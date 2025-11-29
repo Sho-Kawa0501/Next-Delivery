@@ -14,7 +14,7 @@ export async function login(formData: FormData) {
 
   // ===== OAuth Login =====
   if (provider === "google") {
-    const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -23,11 +23,11 @@ export async function login(formData: FormData) {
 
     if (error) {
       const msg = (error as OAuthError).message ?? "oauth_failed";
-      redirect(`/auth/login?error=${encodeURIComponent(msg)}`);
+      redirect(`/login?error=${encodeURIComponent(msg)}`);
     }
 
     if (data?.url) redirect(data.url);
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   // ===== Email Login =====
@@ -35,14 +35,14 @@ export async function login(formData: FormData) {
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    redirect("/auth/login?error=missing");
+    redirect("/login?error=missing");
   }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     const msg = error.message ?? "login_failed";
-    redirect(`/auth/login?error=${encodeURIComponent(msg)}`);
+    redirect(`/login?error=${encodeURIComponent(msg)}`);
   }
 
   revalidatePath("/", "layout");
@@ -57,7 +57,7 @@ export async function signup(formData: FormData) {
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    redirect("/auth/signup?error=missing");
+    redirect("/signup?error=missing");
   }
 
   const { error } = await supabase.auth.signUp({
@@ -68,7 +68,7 @@ export async function signup(formData: FormData) {
 
   if (error) {
     const msg = error.message ?? "signup_failed";
-    redirect(`/auth/signup?error=${encodeURIComponent(msg)}`);
+    redirect(`/signup?error=${encodeURIComponent(msg)}`);
   }
 
   revalidatePath("/login", "layout");

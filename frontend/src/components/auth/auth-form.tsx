@@ -20,21 +20,21 @@ export function AuthForm({
   return (
     <div className="w-full max-w-lg mx-auto p-6 space-y-6">
       <h1 className="text-2xl text-center font-semibold">{title}</h1>
-
       {error && (
         <div className="text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded">
           エラー: {error}
         </div>
       )}
-
       {/* Google OAuth */}
-      <form action={action} className="grid gap-4">
-        <input type="hidden" name="provider" value="google" />
-        <Button type="submit">Googleで{mode === "login" ? "ログイン" : "登録"}</Button>
-      </form>
-
-      <div className="text-center text-sm text-muted-foreground">または</div>
-
+      {mode === "login" && (
+        <>
+          <form action={action} className="grid gap-4">
+            <input type="hidden" name="provider" value="google" />
+            <Button type="submit">Googleアカウントでログイン</Button>
+          </form>
+          <div className="text-center text-sm text-muted-foreground">または</div>
+        </>
+      )}
       <form action={action} className="grid gap-4">
         {mode === "signup" && (
           <AuthInput label="ユーザー名" name="username" />

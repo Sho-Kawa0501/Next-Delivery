@@ -1,10 +1,10 @@
 import { CategoryMenu, Menu } from "@/types"
 import { createClient } from "@/utils/supabase/server"
+import { cdnImagePath } from "../utils"
 
 export async function fetchCategoryMenus(primaryType: string, searchQuery?:string) {
 
   const supabase = await createClient()
-  const bucket = supabase.storage.from("menus")
 
   let query = supabase
     .from('menus')
@@ -38,7 +38,7 @@ export async function fetchCategoryMenus(primaryType: string, searchQuery?:strin
         id: menu.id,
         name: menu.name,
         price: menu.price,
-        photoUrl: bucket.getPublicUrl(menu.image_path).data.publicUrl
+        photoUrl: cdnImagePath("images/menus"+menu.image_path)
       })
     )
 
@@ -61,7 +61,7 @@ export async function fetchCategoryMenus(primaryType: string, searchQuery?:strin
         id: menu.id,
         name: menu.name,
         price: menu.price,
-        photoUrl: bucket.getPublicUrl(menu.image_path).data.publicUrl
+        photoUrl: cdnImagePath("images/menus"+menu.image_path)
       }))
 
     categoryMenus.push({

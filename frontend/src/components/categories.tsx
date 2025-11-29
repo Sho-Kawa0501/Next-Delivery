@@ -27,7 +27,6 @@ const Categories = () => {
     {
       categoryName: "ラーメン",
       type: "ramen_restaurant",
-
       imageUrl: cdnImagePath(`/images/categories/ラーメン.png`),
     },
     {
@@ -38,7 +37,6 @@ const Categories = () => {
     {
       categoryName: "中華料理",
       type: "chinese_restaurant",
-
       imageUrl: cdnImagePath(`/images/categories/中華料理.png`),
     },
     {
@@ -56,13 +54,11 @@ const Categories = () => {
       type: "french_restaurant",
       imageUrl: cdnImagePath(`/images/categories/フランス料理.png`),
     },
-
     {
       categoryName: "ピザ",
       type: "pizza_restaurant",
       imageUrl: cdnImagePath(`/images/categories/ピザ.png`),
     },
-
     {
       categoryName: "韓国料理",
       type: "korean_restaurant",
@@ -80,7 +76,6 @@ const Categories = () => {
   // ページ遷移に使用。urlを書き換えて遷移
   const router = useRouter()
   const currentCategory = searchParams.get("category")
-
   // CategoryコンポーネントのonClickイベントにて選択されたcategoryの値が返ってくる。
   const searchRestaurantOfCategory = (category: string) => {
     const params = new URLSearchParams(searchParams)

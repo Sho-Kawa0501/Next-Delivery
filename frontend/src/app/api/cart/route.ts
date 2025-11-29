@@ -1,4 +1,5 @@
 import { getPlaceDetails } from "@/lib/restaurants/api";
+import { cdnImagePath } from "@/lib/utils";
 import { Cart } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,8 +15,6 @@ export async function GET(request: NextRequest) {
     if(userError || !user) {
       return NextResponse.json({ error: "ユーザーが認証されていません"},{status: 401})
     }
-    // メニューファイルアクセス用
-    const bucket = supabase.storage.from("menus")
 
     // ログインユーザーのカート情報取得
     const { data: carts, error: cartsError } = await supabase
@@ -62,7 +61,8 @@ export async function GET(request: NextRequest) {
           // 画像取得用としてimage_pathを抽出
           const { image_path, ...restMenus } = item.menus
           // メニュー画像パス取得
-          const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
+          // const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
+          const publicUrl = cdnImagePath("images/menus"+item.menus.image_path)
           return {
             // CartItem型オブジェクトをリターン
             ...item,

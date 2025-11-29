@@ -2,10 +2,10 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getPlaceDetails } from "../restaurants/api";
 import { Order } from "@/types";
+import { cdnImagePath } from "../utils";
 
 export async function fetchOrders():Promise<Order[]> {
   const supabase = await createClient();
-  const bucket = supabase.storage.from("menus");
   const {
     data: { user },
     error: userError,
@@ -63,7 +63,7 @@ export async function fetchOrders():Promise<Order[]> {
         // 画像取得用としてimage_pathを抽出
         const { image_path, ...restMenus } = item
         // メニュー画像パス取得
-        const publicUrl = bucket.getPublicUrl(image_path).data.publicUrl
+        const publicUrl = cdnImagePath("images/menus"+image_path)
         return {
           ...restMenus,
           photoUrl: publicUrl,

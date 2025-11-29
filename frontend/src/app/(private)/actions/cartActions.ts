@@ -1,5 +1,6 @@
 "use server"
 import { getPlaceDetails } from "@/lib/restaurants/api";
+import { cdnImagePath } from "@/lib/utils";
 import { Cart, Menu } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -23,8 +24,6 @@ export async function addToCartAction(
   if (userError || !user) {
     redirect("/login");
   }
-
-  const bucket = supabase.storage.from("menus")
 
   // ログインユーザーの対象の既存レストランカート情報取得
   const {data: existingCart, error: existingCartError} = await supabase
@@ -115,7 +114,7 @@ export async function addToCartAction(
       ...insertedCart,
       cart_items: insertedCart.cart_items.map((item) => {
         const { image_path, ...restMenus } = item.menus
-        const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
+        const publicUrl = cdnImagePath("images/menus"+item.menus.image_path)
         return {
           ...item,
           menus: {

@@ -6,6 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const cdnImagePath = (path: string) => {
-  const base = process.env.NEXT_PUBLIC_CDN_BASE_URL ?? ""
+  const base = process.env.NEXT_PUBLIC_CDN_BASE_URL
   return `${base}${path}`
 }

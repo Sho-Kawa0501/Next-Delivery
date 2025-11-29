@@ -38,7 +38,7 @@ export async function fetchCategoryMenus(primaryType: string, searchQuery?:strin
         id: menu.id,
         name: menu.name,
         price: menu.price,
-        photoUrl: cdnImagePath("images/menus"+menu.image_path)
+        photoUrl: cdnImagePath("/images/menus/"+menu.image_path)
       })
     )
 
@@ -61,7 +61,7 @@ export async function fetchCategoryMenus(primaryType: string, searchQuery?:strin
         id: menu.id,
         name: menu.name,
         price: menu.price,
-        photoUrl: cdnImagePath("images/menus"+menu.image_path)
+        photoUrl: cdnImagePath("/images/menus/"+menu.image_path)
       }))
 
     categoryMenus.push({

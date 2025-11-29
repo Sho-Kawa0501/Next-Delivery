@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           const { image_path, ...restMenus } = item.menus
           // メニュー画像パス取得
           // const publicUrl = bucket.getPublicUrl(item.menus.image_path).data.publicUrl
-          const publicUrl = cdnImagePath("images/menus"+item.menus.image_path)
+          const publicUrl = cdnImagePath("/images/menus/"+item.menus.image_path)
           return {
             // CartItem型オブジェクトをリターン
             ...item,

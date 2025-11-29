@@ -63,14 +63,14 @@ export async function fetchOrders():Promise<Order[]> {
         // 画像取得用としてimage_pathを抽出
         const { image_path, ...restMenus } = item
         // メニュー画像パス取得
-        const publicUrl = cdnImagePath("images/menus"+image_path)
+        const publicUrl = cdnImagePath("/images/menus/"+image_path)
         return {
           ...restMenus,
           photoUrl: publicUrl,
         }
       }),
       restaurantName: restaurantData?.displayName ?? "不明な店舗",
-      photoUrl: restaurantData?.photoUrl ?? "/no_imae.png"
+      photoUrl: restaurantData?.photoUrl ?? "/no_image.png"
     }
   })
 

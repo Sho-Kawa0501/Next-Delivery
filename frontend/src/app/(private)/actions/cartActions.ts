@@ -114,7 +114,7 @@ export async function addToCartAction(
       ...insertedCart,
       cart_items: insertedCart.cart_items.map((item) => {
         const { image_path, ...restMenus } = item.menus
-        const publicUrl = cdnImagePath("images/menus"+item.menus.image_path)
+        const publicUrl = cdnImagePath("/images/menus/"+item.menus.image_path)
         return {
           ...item,
           menus: {

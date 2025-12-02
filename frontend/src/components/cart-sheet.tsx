@@ -20,7 +20,7 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { calculateItemTotal, calculateSubtotal } from '@/lib/cart/utils';
-import { updateCartItemAction } from '@/app/(private)/actions/cartActions';
+import { clearCartAction, updateCartItemAction } from '@/app/(private)/actions/cartActions';
 import { KeyedMutator } from 'swr';
 
 interface CartSheetProps {
@@ -86,6 +86,25 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
     }
   }
 
+  const handleClearCart = async () => {
+    if (!cart) return;
+    try {
+      await clearCartAction(cart.id);
+      closeCart();
+      setTimeout(
+        () =>
+          mutateCart(
+            (prevCarts) => prevCarts?.filter((c) => c.id !== cart.id),
+            false
+          ),
+        200
+      );
+    } catch (error) {
+      console.error(error);
+      alert("エラーが発生しました");
+    }
+  }
+
   return (
     <Sheet 
       open={isOpen}
@@ -115,22 +134,6 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
                   {cart.restaurantName}
                 </Link>
               </SheetClose>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size={"icon"}
-                      // onClick={handleClearCart}
-                    >
-                      <Trash2 color="red" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>カートを空にする</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
 
             {/* メニューエリア */}
@@ -178,13 +181,31 @@ const CartSheet = ({cart, count, isOpen, openCart, closeCart, mutateCart}:CartSh
               <div>小計</div>
               <div>{calculateSubtotal(cart.cart_items).toLocaleString()}</div>
             </div>
-            <SheetClose asChild>
-              <Button asChild>
-                <Link href={`/restaurant/${cart.restaurant_id}/checkout`}>
-                  お会計に進む
-                </Link>
-              </Button>
-            </SheetClose>
+            <div className="flex justify-between items-center">
+              <SheetClose asChild>
+                <Button asChild className="w-64">
+                  <Link href={`/restaurant/${cart.restaurant_id}/checkout`}>
+                    お会計に進む
+                  </Link>
+                </Button>
+              </SheetClose>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size={"icon"}
+                      onClick={handleClearCart}
+                    >
+                      <Trash2 color="red" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>カートを空にする</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-full gap-4">

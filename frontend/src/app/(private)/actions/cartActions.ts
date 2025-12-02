@@ -293,3 +293,28 @@ export async function checkoutAction(
     throw new Error("カート削除に失敗しました");
   }
 }
+
+export async function clearCartAction(cartId: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    redirect("/login");
+  }
+
+  const { error: deleteCartError } = await supabase
+    .from("carts")
+    .delete()
+    .match({
+      user_id: user.id,
+      id: cartId,
+    });
+
+  if (deleteCartError) {
+    console.error("カートの削除に失敗しました。", deleteCartError);
+    throw new Error("カートの削除に失敗しました。");
+  }
+}

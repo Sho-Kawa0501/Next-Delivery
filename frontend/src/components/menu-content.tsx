@@ -24,7 +24,7 @@ const MenuContent = ({categoryMenus, restaurantId}: MenuContentProps) => {
   // カートモーダル開閉状態管理
   const { openCart } = useCartVisibility()
   // 選択中レストランのカート情報取得
-  const { targetCart, mutateCart } = useCart(restaurantId, false)
+  const { targetCart, isLoading, mutateCart } = useCart(restaurantId, false)
   // メニューカテゴリー
   const [ activeCategoryId, setActiveCategoryId ] = useState(categoryMenus[0].id)
   // カテゴリー名押下時

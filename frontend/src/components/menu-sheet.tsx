@@ -7,7 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Bookmark, Heart, Menu, Pencil } from "lucide-react";
+import { Bookmark, Menu, Pencil } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
@@ -16,7 +16,6 @@ import { logout } from "@/app/(auth)/login/actions";
 import UserInfoModal from "./auth/user-info-modal";
 
 export default async function MenuSheet() {
-
   const supabase = await createClient()
   // ユーザーチェック
   const { data: { user } } = await supabase.auth.getUser()
@@ -26,7 +25,7 @@ export default async function MenuSheet() {
   }
 
   // ユーザー情報取得
-  const {avatar_url, full_name, display_name, email} = user.user_metadata
+  const {full_name, display_name, email} = user.user_metadata
 
   return (
     <Sheet>

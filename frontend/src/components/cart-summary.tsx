@@ -16,7 +16,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Cart } from '@/types';
 import { useCart } from '@/hooks/cart/useCart';
 import CartSkelton from './cart-skelton';
 import { calculateItemTotal, calculateSubtotal, sumItems } from '@/lib/cart/utils';
@@ -117,7 +116,7 @@ const CartSummary = ({restaurantId}: CartSummaryProps) => {
           href={`/restaurant/${cart.restaurant_id}`} 
           className="mb-4 flex justify-between items-center">
           <div className="flex items-center gap-4 flex-1">
-            <div className="relative size-12 rounded-full overflow-hidden flex-none">
+            <div className="relative size-12 rounde d-full overflow-hidden flex-none">
               <Image
                 src={cart.photoUrl}
                 alt={cart.restaurantName ?? "レストラン画像"}
@@ -131,7 +130,7 @@ const CartSummary = ({restaurantId}: CartSummaryProps) => {
           <ChevronRight size={16} />
         </Link>
         <Button className="cursor-pointer" onClick={handleCheckout}>
-          本ページの内容を確認の上、注文を確定する
+          注文を確定する
         </Button>
       </CardHeader>
       <CardContent>

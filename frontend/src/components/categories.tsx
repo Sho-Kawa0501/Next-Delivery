@@ -40,7 +40,7 @@ const Categories = () => {
       imageUrl: cdnImagePath(`/images/categories/中華料理.png`),
     },
     {
-      categoryName: "コーヒ-",
+      categoryName: "コーヒー",
       type: "cafe",
       imageUrl: cdnImagePath(`/images/categories/コーヒー.png`),
     },

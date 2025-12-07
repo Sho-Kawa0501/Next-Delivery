@@ -13,7 +13,7 @@ const Header = async () => {
       <div className="flex items-center h-full space-x-4 px-4 max-w-[1920px] mx-auto">
         <MenuSheet />
         <div className="font-bold">
-          <Link href={"/"}>Coffee App</Link>
+          <Link href={"/"}>Next-Delivery</Link>
         </div>
         <AddressModal />
         <div className="flex-1">

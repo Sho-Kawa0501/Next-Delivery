@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
 import Image from "next/image";
 import { getPlaceDetails } from '@/lib/restaurants/api';
 import { notFound } from 'next/navigation';
@@ -33,20 +32,13 @@ const RestaurantPage = async ({params, searchParams}: {
       <div>
         <div className="h-64 rounded-xl shadow-md relative overflow-hidden">
           <Image
-            src={restaurant.photoUrl!}
+            src={restaurant.photoUrl ?? "/no_image.png"}
             fill
             alt={restaurant.displayName ?? "レストラン画像"}
             className="object-cover"
             priority
             sizes="(max-width: 1280px) 100vw, 1200px"
           />
-          <Button
-            size="icon"
-            variant="outline"
-            className="absolute top-4 right-4 shadow rounded-full"
-          >
-            <Heart color="gray" strokeWidth={3} size={15} />
-          </Button>
         </div>
         <div className="mt-4 flex items-center justify-between">
           <div>

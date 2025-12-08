@@ -12,7 +12,7 @@ TypeScript、React.js、Next.js の学習成果を記録として残すために
 ※作成されたアカウントは管理者より、定期的に削除させていただきます。
 
 ## トップページ（ユーザーログインまたは新規登録後）
-
+<img width="983" height="559" alt="Image" src="https://github.com/user-attachments/assets/26310700-b528-4bfb-aa6b-f11be3d957ad" />
 
 - ①ユーザー情報モーダルの表示 
 - ②住所検索モーダルの表示
@@ -36,7 +36,7 @@ TypeScript、React.js、Next.js の学習成果を記録として残すために
 ## 主な機能
 
 ### ユーザー情報
-- ユーザー登録
+- ユーザー新規登録
 - ユーザーログイン
 - ユーザー名変更
 
@@ -51,8 +51,8 @@ TypeScript、React.js、Next.js の学習成果を記録として残すために
 
 ### カート情報
 - カートへの商品追加
-- 数量変更
-- 削除
+- カート内商品の数量変更
+- カートまたはカート内商品の削除
 
 ### 注文履歴情報
 - 注文履歴情報の表示
@@ -60,7 +60,7 @@ TypeScript、React.js、Next.js の学習成果を記録として残すために
 
 
 ## アーキテクチャ
-
+![Image](https://github.com/user-attachments/assets/d2cd96a6-584e-4c92-ac95-a0df1f5b0936)
 
 ## ER 図
-
+<img width="983" height="559" alt="Image" src="https://github.com/user-attachments/assets/26310700-b528-4bfb-aa6b-f11be3d957ad" />
